@@ -132,7 +132,6 @@ NS_ASSUME_NONNULL_BEGIN
  *	@brief log all property 	打印所有的属性名称和数据
  */
 - (NSString *)printAllPropertys;
-- (NSString *)printAllPropertysIsContainParent:(BOOL)containParent;
 
 - (NSMutableString *)getAllPropertysString;
 
