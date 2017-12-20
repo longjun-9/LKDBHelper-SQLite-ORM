@@ -164,10 +164,7 @@
 {
     return @"LKTestAddress";
 }
-+(BOOL)isContainParent
-{
-    return YES;
-}
+
 @end
 
 @implementation LKTestForeignSuper

@@ -16,7 +16,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LKDBHelper : NSObject
-@property (nonatomic, copy) NSString *dbPath;
+
+@property (nonatomic, copy, nullable) NSString *dbPath;
+
 /**
  *  @brief Log error message, Default: NO
  */

@@ -746,16 +746,6 @@ static char LKModelBase_Key_Inserting;
                 pkArray = [NSArray arrayWithObject:pk];
             }
         }
-        if ([self isContainParent] && [self superclass] != [NSObject class]) {
-            LKModelInfos *superInfos = [[self superclass] getModelInfos];
-            for (NSInteger i = 0; i < superInfos.count; i++) {
-                LKDBProperty *db_p = [superInfos objectWithIndex:i];
-                if (db_p.propertyName && db_p.propertyType && [db_p.propertyName isEqualToString:@"rowid"] == NO) {
-                    [pronames addObject:db_p.propertyName];
-                    [protypes addObject:db_p.propertyType];
-                }
-            }
-        }
         if (pronames.count > 0) {
             infos = [[LKModelInfos alloc] initWithKeyMapping:keymapping propertyNames:pronames propertyType:protypes primaryKeys:pkArray];
         } else {
@@ -766,11 +756,6 @@ static char LKModelBase_Key_Inserting;
 
     [lock unlock];
     return infos;
-}
-
-+ (BOOL)isContainParent
-{
-    return NO;
 }
 
 + (BOOL)isContainSelf
@@ -870,7 +855,7 @@ static char LKModelBase_Key_Inserting;
         [protypes addObject:propertyClassName];
     }
     free(properties);
-    if ([self isContainParent] && [self superclass] != [NSObject class]) {
+    if ([self superclass] != [NSObject class]) {
         [[self superclass] getSelfPropertys:pronames protypes:protypes];
     }
 }
@@ -881,27 +866,24 @@ static char LKModelBase_Key_Inserting;
     Class clazz = [self class];
     NSMutableString *sb = [NSMutableString stringWithFormat:@"\n <%@> :\n", NSStringFromClass(clazz)];
     [sb appendFormat:@"rowid : %ld\n", (long)self.rowid];
-    [self mutableString:sb appendPropertyStringWithClass:clazz containParent:YES];
+    [self mutableString:sb appendPropertyStringWithClass:clazz];
     return sb;
 }
 - (NSString *)printAllPropertys
-{
-    return [self printAllPropertysIsContainParent:NO];
-}
-- (NSString *)printAllPropertysIsContainParent:(BOOL)containParent
 {
 #ifdef DEBUG
     Class clazz = [self class];
     NSMutableString *sb = [NSMutableString stringWithFormat:@"\n <%@> :\n", NSStringFromClass(clazz)];
     [sb appendFormat:@"rowid : %ld\n", (long)self.rowid];
-    [self mutableString:sb appendPropertyStringWithClass:clazz containParent:containParent];
+    [self mutableString:sb appendPropertyStringWithClass:clazz];
     NSLog(@"%@", sb);
     return sb;
 #else
     return @"";
 #endif
 }
-- (void)mutableString:(NSMutableString *)sb appendPropertyStringWithClass:(Class)clazz containParent:(BOOL)containParent
+
+- (void)mutableString:(NSMutableString *)sb appendPropertyStringWithClass:(Class)clazz
 {
     if (clazz == [NSObject class]) {
         return;
@@ -914,8 +896,8 @@ static char LKModelBase_Key_Inserting;
         [sb appendFormat:@" %@ : %@ \n", propertyName, [self valueForKey:propertyName]];
     }
     free(properties);
-    if (containParent) {
-        [self mutableString:sb appendPropertyStringWithClass:clazz.superclass containParent:containParent];
+    if ([self superclass] != [NSObject class]) {
+        [self mutableString:sb appendPropertyStringWithClass:clazz.superclass];
     }
 }
 

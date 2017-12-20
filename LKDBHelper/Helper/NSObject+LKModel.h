@@ -122,11 +122,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (LKModelInfos *)getModelInfos;
 
 /**
- *	@brief Containing the super class attributes	设置是否包含 父类 的属性
- */
-+ (BOOL)isContainParent;
-
-/**
  *  当前表中的列是否包含自身的属性。
  *
  *  @return BOOL
